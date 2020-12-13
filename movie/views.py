@@ -108,23 +108,24 @@ class MovieView(View):
 
     @content_type
     def put(self, request):
-        """영화 상세페이지 수정 api
+        """영화 전체 리스트 수정 api
 
-        body 로 정보를 수정하려는 영화의 id 와 데이터 받아와 수정하기
+        body 로 영화 전체 리스트 정보 받아서 update 하기
 
         Args:
             request:
-                movie_id : 영화 id
-                name : 영화 제목, str
-                country : 국가, str
-                running_time : 상영 시간, int
-                release_date : 개봉 날짜, str
-                director : 감독, str
-                rating : 등급(15세 관람가, 12세 관람가 등), str
-                image : 포스터 이미지, url
-                summary : 줄거리, str
-                genre : 장르, list
-                actor : 배우, list
+                movie_list(type:dict):
+                    movie_id : 영화 id
+                    name : 영화 제목, str
+                    country : 국가, str
+                    running_time : 상영 시간, int
+                    release_date : 개봉 날짜, str
+                    director : 감독, str
+                    rating : 등급(15세 관람가, 12세 관람가 등), str
+                    image : 포스터 이미지, url
+                    summary : 줄거리, str
+                    genre : 장르, list
+                    actor : 배우, list
 
         Returns:
             202 : Accepted, 요청이 접수되었을 때
@@ -135,35 +136,36 @@ class MovieView(View):
 
         """
         try:
-            data = json.loads(request.body)
+            data_list = json.loads(request.body)
 
-            if not Movie.objects.filter(id=data['movie_id']).exists():
-                return JsonResponse({'message': 'Not found'}, status=404)
+            for data in data_list:
+                if not Movie.objects.filter(id=data['movie_id']).exists():
+                    return JsonResponse({'message': 'Not found'}, status=404)
 
-            country, flag = Country.objects.get_or_create(name=data['country'])
-            rating, flag = Rating.objects.get_or_create(name=data['rating'])
+                country, flag = Country.objects.get_or_create(name=data['country'])
+                rating, flag = Rating.objects.get_or_create(name=data['rating'])
 
-            MovieActor.objects.filter(movie_id=data['movie_id']).delete()
-            MovieGenre.objects.filter(movie_id=data['movie_id']).delete()
+                MovieActor.objects.filter(movie_id=data['movie_id']).delete()
+                MovieGenre.objects.filter(movie_id=data['movie_id']).delete()
 
-            movie = Movie.objects.get(id=data['movie_id'])
-            movie.name = data['name']
-            movie.country = country
-            movie.running_time = data['running_time']
-            movie.release_date = datetime.strptime(data['release_date'], '%Y%m%d').date()
-            movie.director = data['director']
-            movie.rating = rating
-            movie.image = data['image']
-            movie.summary = data['summary']
-            movie.save()
+                movie = Movie.objects.get(id=data['movie_id'])
+                movie.name = data['name']
+                movie.country = country
+                movie.running_time = data['running_time']
+                movie.release_date = datetime.strptime(data['release_date'], '%Y%m%d').date()
+                movie.director = data['director']
+                movie.rating = rating
+                movie.image = data['image']
+                movie.summary = data['summary']
+                movie.save()
 
-            for gen in data['genre']:
-                genre, flag = Genre.objects.get_or_create(name=gen)
-                MovieGenre.objects.create(movie_id=data['movie_id'], genre_id=genre.id)
+                for gen in data['genre']:
+                    genre, flag = Genre.objects.get_or_create(name=gen)
+                    MovieGenre.objects.create(movie_id=data['movie_id'], genre_id=genre.id)
 
-            for act in data['actor']:
-                actor, flag = Actor.objects.get_or_create(name=act)
-                MovieActor.objects.create(movie_id=data['movie_id'], actor_id=actor.id)
+                for act in data['actor']:
+                    actor, flag = Actor.objects.get_or_create(name=act)
+                    MovieActor.objects.create(movie_id=data['movie_id'], actor_id=actor.id)
 
             return JsonResponse({'message': 'Accepted'}, status=202)
 
@@ -173,26 +175,16 @@ class MovieView(View):
             return JsonResponse({'message': '{}'.format(e)}, status=500)
 
     def delete(self, request):
-        """영화 정보 삭제 api
+        """영화 리스트 삭제 api
 
-        body 에 삭제하려는 영화의 id 받아와서 데이터 삭제하기
-
-        Args:
-            request:
-                movie_id : 영화 id
+        전체 영화 정보 삭제하기
 
         Returns:
             204 : No contents, 삭제가 정상적으로 이루어졌을 때
-            404 : Not found, id 에 해당하는 영화 데이터가 없을 때
             500 : exception
         """
         try:
-            movie_id = request.GET.get('movie_id', None)
-
-            if not Movie.objects.filter(id=movie_id).exists():
-                return JsonResponse({'message': 'Not found'}, status=404)
-
-            Movie.objects.get(id=movie_id).delete()
+            Movie.objects.all().delete()
 
             return JsonResponse({'message': 'No contents'}, status=204)
 
@@ -208,7 +200,7 @@ class MovieDetailView(View):
 
         Args:
             request:
-            movie_id: 영화 id
+                movie_id: 영화 id
 
         Returns:
             200 : Success, movie_data (type:dict)

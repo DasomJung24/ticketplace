@@ -236,19 +236,32 @@ class MovieTest(TestCase):
     def test_put_movie_data_success(self):
         client = Client()
 
-        movie_data = {
-            'movie_id': 1,
-            'name': '조제',
-            'country': '한국',
-            'running_time': 120,
-            'release_date': '20201210',
-            'director': '김종관',
-            'rating': '15세 관람가',
-            'image': 'test2.jpg',
-            'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
-            'genre': ['미스터리', '스릴러'],
-            'actor': ['사라 폴슨', '키에라 앨런']
-        }
+        movie_data = [{
+                'movie_id': 1,
+                'name': '조제',
+                'country': '한국',
+                'running_time': 120,
+                'release_date': '20201210',
+                'director': '김종관',
+                'rating': '15세 관람가',
+                'image': 'test2.jpg',
+                'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
+                'genre': ['미스터리', '스릴러'],
+                'actor': ['사라 폴슨', '키에라 앨런']
+            },
+            {
+                'movie_id': 2,
+                'name': '이웃사촌',
+                'country': '한국',
+                'running_time': 120,
+                'release_date': '20201210',
+                'director': '김종관',
+                'rating': '15세 관람가',
+                'image': 'test2.jpg',
+                'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
+                'genre': ['미스터리', '스릴러'],
+                'actor': ['사라 폴슨', '키에라 앨런']
+            }]
 
         response = client.put('/movies', json.dumps(movie_data), content_type='application/json')
         self.assertEqual(response.json(), {'message': 'Accepted'})
@@ -257,19 +270,32 @@ class MovieTest(TestCase):
     def test_put_movie_data_key_error(self):
         client = Client()
 
-        movie_data = {
+        movie_data = [{
             'movie_id': 1,
             'name': '조제',
-            'country': '한국',
+            'county': '한국',
             'running_time': 120,
             'release_date': '20201210',
             'director': '김종관',
-            'ratin': '15세 관람가',
+            'rating': '15세 관람가',
             'image': 'test2.jpg',
             'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
             'genre': ['미스터리', '스릴러'],
             'actor': ['사라 폴슨', '키에라 앨런']
-        }
+        },
+            {
+                'movie_id': 2,
+                'name': '이웃사촌',
+                'country': '한국',
+                'running_time': 120,
+                'release_date': '20201210',
+                'director': '김종관',
+                'rating': '15세 관람가',
+                'image': 'test2.jpg',
+                'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
+                'genre': ['미스터리', '스릴러'],
+                'actor': ['사라 폴슨', '키에라 앨런']
+        }]
 
         response = client.put('/movies', json.dumps(movie_data), content_type='application/json')
         self.assertEqual(response.json(), {'message': 'Key Error'})
@@ -278,8 +304,8 @@ class MovieTest(TestCase):
     def test_put_movie_data_not_found(self):
         client = Client()
 
-        movie_data = {
-            'movie_id': 5,
+        movie_data = [{
+            'movie_id': 7,
             'name': '조제',
             'country': '한국',
             'running_time': 120,
@@ -290,7 +316,20 @@ class MovieTest(TestCase):
             'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
             'genre': ['미스터리', '스릴러'],
             'actor': ['사라 폴슨', '키에라 앨런']
-        }
+        },
+            {
+                'movie_id': 2,
+                'name': '이웃사촌',
+                'country': '한국',
+                'running_time': 120,
+                'release_date': '20201210',
+                'director': '김종관',
+                'rating': '15세 관람가',
+                'image': 'test2.jpg',
+                'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
+                'genre': ['미스터리', '스릴러'],
+                'actor': ['사라 폴슨', '키에라 앨런']
+            }]
 
         response = client.put('/movies', json.dumps(movie_data), content_type='application/json')
         self.assertEqual(response.json(), {'message': 'Not found'})
@@ -299,7 +338,7 @@ class MovieTest(TestCase):
     def test_put_movie_data_not_acceptable(self):
         client = Client()
 
-        movie_data = {
+        movie_data = [{
             'movie_id': 1,
             'name': '조제',
             'country': '한국',
@@ -311,7 +350,20 @@ class MovieTest(TestCase):
             'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
             'genre': ['미스터리', '스릴러'],
             'actor': ['사라 폴슨', '키에라 앨런']
-        }
+        },
+            {
+                'movie_id': 2,
+                'name': '이웃사촌',
+                'country': '한국',
+                'running_time': 120,
+                'release_date': '20201210',
+                'director': '김종관',
+                'rating': '15세 관람가',
+                'image': 'test2.jpg',
+                'summary': '가장 안전했던 그곳이 가장 위험한 공간이 된다!',
+                'genre': ['미스터리', '스릴러'],
+                'actor': ['사라 폴슨', '키에라 앨런']
+            }]
 
         response = client.put('/movies', json.dumps(movie_data), content_type='text')
         self.assertEqual(response.json(), {'message': 'Not acceptable'})
@@ -320,14 +372,8 @@ class MovieTest(TestCase):
     def test_delete_movie_data_success(self):
         client = Client()
 
-        response = client.delete('/movies?movie_id=1')
+        response = client.delete('/movies')
         self.assertEqual(response.status_code, 204)
-
-    def test_delete_movie_data_not_found(self):
-        client = Client()
-
-        response = client.delete('/movies?movie_id=10')
-        self.assertEqual(response.status_code, 404)
 
 
 class MovieDetailTest(TestCase):
