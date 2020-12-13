@@ -7,7 +7,6 @@ from .decorator import content_type
 
 
 class MovieView(View):
-    @content_type
     def get(self, request):
         """ 영화 리스트 api
 
@@ -173,7 +172,6 @@ class MovieView(View):
         except Exception as e:
             return JsonResponse({'message': '{}'.format(e)}, status=500)
 
-    @content_type
     def delete(self, request):
         """영화 정보 삭제 api
 
@@ -190,23 +188,20 @@ class MovieView(View):
             500 : exception
         """
         try:
-            data = json.loads(request.body)
+            movie_id = request.GET.get('movie_id', None)
 
-            if not Movie.objects.filter(id=data['movie_id']).exists():
+            if not Movie.objects.filter(id=movie_id).exists():
                 return JsonResponse({'message': 'Not found'}, status=404)
 
-            Movie.objects.get(id=data['movie_id']).delete()
+            Movie.objects.get(id=movie_id).delete()
 
             return JsonResponse({'message': 'No contents'}, status=204)
 
-        except KeyError:
-            return JsonResponse({'message': 'Key Error'}, status=400)
         except Exception as e:
             return JsonResponse({'message': '{}'.format(e)}, status=500)
 
 
 class MovieDetailView(View):
-    @content_type
     def get(self, request, movie_id):
         """영화 상세페이지 api
 

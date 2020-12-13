@@ -1,7 +1,7 @@
 ### 영화 정보 api
 - 영화 list
 - 영화 상세페이지 (CRUD)
-- content_type이 json이 아닌 경우 406 error가 발생하는 content_type 이라는 데코레이터를 decorator.py에 작성하여 모든 api에 적용
+- content_type이 json이 아닌 경우 406 error가 발생하는 데코레이터를 decorator.py에 작성하여 api에 적용
 - unit test
 
 ---

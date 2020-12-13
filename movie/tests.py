@@ -320,27 +320,13 @@ class MovieTest(TestCase):
     def test_delete_movie_data_success(self):
         client = Client()
 
-        movie_data = {'movie_id': 1}
-
-        response = client.delete('/movies', json.dumps(movie_data), content_type='application/json')
+        response = client.delete('/movies?movie_id=1')
         self.assertEqual(response.status_code, 204)
-
-    def test_delete_movie_data_key_error(self):
-        client = Client()
-
-        movie_data = {'movie': 2}
-
-        response = client.delete('/movies', json.dumps(movie_data), content_type='application/json')
-        self.assertEqual(response.json(), {'message': 'Key Error'})
-        self.assertEqual(response.status_code, 400)
 
     def test_delete_movie_data_not_found(self):
         client = Client()
 
-        movie_data = {'movie_id': 6}
-
-        response = client.delete('/movies', json.dumps(movie_data), content_type='application/json')
-        self.assertEqual(response.json(), {'message': 'Not found'})
+        response = client.delete('/movies?movie_id=10')
         self.assertEqual(response.status_code, 404)
 
 
