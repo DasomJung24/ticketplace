@@ -183,7 +183,6 @@ class MovieView(View):
 
         Returns:
             204 : No contents, 삭제가 정상적으로 이루어졌을 때
-            400 : Key Error
             404 : Not found, id 에 해당하는 영화 데이터가 없을 때
             500 : exception
         """
