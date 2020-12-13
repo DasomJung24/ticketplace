@@ -35,9 +35,9 @@ GET /movies/{movie_id}
 영화 정보 생성하기
 POST /movies
 
-영화 상세페이지 수정하기
+영화 리스트 수정하기
 PUT /movies
 
-영화 정보 삭제하기
+영화 리스트 삭제하기
 DELETE /movies
 
